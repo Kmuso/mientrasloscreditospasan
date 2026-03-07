@@ -1,9 +1,51 @@
 [
   {
     "id": 1,
-    "image": "https://link-de-tu-imagen.jpg",
+    "title": "Entre Bugonia y Save the Green Planet: Manual sobre cómo crear un Alien",
+    "excerpt": "Un análisis comparativo sobre la representación alienígena, la paranoia y la sátira social. Cómo el cine surcoreano y occidental abordan el miedo a lo desconocido.",
+    "date": "10 MAR 2026",
+    "image": "https://images.unsplash.com/photo-1618477461853-cf6ed80fbfc5?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 2,
     "title": "La Mirada Surrealista",
-    "excerpt": "Un análisis profundo...",
-    "date": "07 MAR 2026"
+    "excerpt": "Una exploración sobre cómo el cine desafía la lógica y nos sumerge en los rincones más oscuros y fascinantes del subconsciente humano.",
+    "date": "07 MAR 2026",
+    "image": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 3,
+    "title": "Sin Novedad en el Frente: La Guerra Perfecta",
+    "excerpt": "Una mirada profunda a la brutalidad del conflicto bélico y el virtuosismo técnico. Cómo esta adaptación captura la esencia desoladora de la trinchera y la pérdida de la inocencia.",
+    "date": "24 FEB 2026",
+    "image": "https://images.unsplash.com/photo-1533614767277-2e113fa0aeb2?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 4,
+    "title": "El Ecosistema de Ghibli: Naturaleza y Máquina",
+    "excerpt": "La tensión constante entre el progreso industrial y la conservación ambiental en las obras maestras de Hayao Miyazaki.",
+    "date": "15 FEB 2026",
+    "image": "https://images.unsplash.com/photo-1550684376-efcbd6e3f031?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 5,
+    "title": "Suspiria y el Color del Terror",
+    "excerpt": "Cómo Dario Argento utilizó una paleta cromática asfixiante para construir una de las atmósferas más icónicas del cine de terror europeo.",
+    "date": "02 FEB 2026",
+    "image": "https://images.unsplash.com/photo-1505686994434-e3f33204cdfc?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 6,
+    "title": "Blade Runner: La Memoria Sintética",
+    "excerpt": "Una revisión sobre la humanidad, la inteligencia artificial y el peso de los recuerdos implantados en la lluvia de Los Ángeles.",
+    "date": "20 ENE 2026",
+    "image": "https://images.unsplash.com/photo-1515630278258-407f66498911?q=80&w=1000&auto=format&fit=crop"
+  },
+  {
+    "id": 7,
+    "title": "Parásitos: Arquitectura de Clases",
+    "excerpt": "El uso del espacio, las escaleras y los sótanos como metáfora visual de la desigualdad económica en la obra cumbre de Bong Joon-ho.",
+    "date": "10 ENE 2026",
+    "image": "https://images.unsplash.com/photo-1582639510494-c80b5ea9f133?q=80&w=1000&auto=format&fit=crop"
   }
 ]
