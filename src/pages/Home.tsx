@@ -52,7 +52,7 @@ export default function Home() {
         <div className="overflow-hidden py-2">
           <motion.h1 
             variants={wordVars}
-            className="text-[4vw] leading-[0.8] font-black  tracking-[-0.05em]"
+            className="text-[4vw] leading-[0.8] font-black tracking-[-0.05em]"
           >
             mientrasloscréditospasan.com
           </motion.h1>
