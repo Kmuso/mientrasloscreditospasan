@@ -5,10 +5,13 @@
 @theme {
   /* La fuente Serif para el look "Portrait" */
   --font-serif: "Cormorant Garamond", serif;
+  /* La fuente técnica para metadatos */
   --font-mono: "Space Mono", monospace;
   
   --color-cream: #fdf5e6;
   --color-ink: #1a1a1a;
+  /* El negro profundo para nuestro diseño nocturno */
+  --color-noir: #0a0a0a; 
 }
 
 body {

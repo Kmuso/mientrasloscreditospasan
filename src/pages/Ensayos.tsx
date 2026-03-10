@@ -1,140 +1,155 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, useScroll, useTransform } from 'motion/react'; 
 import database from '../../metadata.json'; 
 
 export default function Ensayos() {
-  // Configuración de paginación para la lista inferior
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 4; // Cuántos ensayos mostrar en la lista inferior por página
+  const itemsPerPage = 4; 
   
-  // Separamos las 4 primeras entradas gigantes del resto del catálogo
-  const featuredEntries = database.slice(0, 4);
-  const catalogEntries = database.slice(4);
-
-  // Lógica matemática para la paginación
-  const totalPages = Math.ceil(catalogEntries.length / itemsPerPage) || 1;
-  const currentCatalog = catalogEntries.slice(
+  const totalPages = Math.ceil(database.length / itemsPerPage) || 1;
+  const currentCatalog = database.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
-  // Colores pastel para los fondos gigantes y los puntitos de la lista
-  const pastelsBg = ['bg-[#ffd1dc]', 'bg-[#bde0fe]', 'bg-[#d8f3dc]', 'bg-[#fcf6bd]'];
-  const dotColors = ['bg-rose-300', 'bg-blue-300', 'bg-emerald-300', 'bg-amber-300', 'bg-purple-300'];
+  const { scrollY } = useScroll();
+  const headerOpacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const headerY = useTransform(scrollY, [0, 300], [0, -50]);
 
   return (
-    <div className="min-h-screen bg-[#fdf5e6] text-black font-sans selection:bg-black selection:text-[#fdf5e6]">
+    <div className="min-h-screen bg-[#FBF9F6] text-[#11161A] font-sans selection:bg-[#ff4500] selection:text-white 
+      bg-[radial-gradient(#ff450030_1.5px,transparent_1.5px)] bg-[size:36px_36px]">
       
-      {/* 1. NAVEGACIÓN */}
-      <nav className="px-6 py-8 md:px-12 flex justify-between items-center border-b border-black/10">
-        <Link to="/" className="text-xs font-bold tracking-[0.2em] uppercase hover:opacity-50 transition-opacity">
-          [ ← Volver al Inicio ]
+      <nav className="px-6 py-10 md:px-12 flex justify-between items-center max-w-[1440px] mx-auto relative z-20">
+        <Link to="/" className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors flex items-center gap-2">
+          <span className="text-[#ff4500]">←</span> Volver al Inicio
         </Link>
-        <div className="text-xs font-bold tracking-[0.2em] uppercase text-black/40">
-          Ensayos & Críticas
+        <div className="text-xs font-medium tracking-[0.15em] uppercase text-[#11161A]/50">
+          Archivo Textual
         </div>
       </nav>
 
-      {/* 2. LAS 4 ENTRADAS GIGANTES INTERCALADAS */}
-      <div>
-        {featuredEntries.map((ensayo, index) => {
-          // isEven determina si es par o impar para intercalar el diseño
-          const isEven = index % 2 === 0;
-          const bgColor = pastelsBg[index % pastelsBg.length];
+      {/* CORRECCIÓN 1: El título ahora tiene 'z-0' en lugar de '-z-10'. 
+          Queda en la capa base, pero por encima del fondo principal. */}
+      <motion.header 
+        style={{ opacity: headerOpacity, y: headerY }}
+        className="max-w-[1440px] mx-auto px-6 md:px-12 pt-10 pb-24 text-center flex flex-col items-center justify-center sticky top-0 z-0"
+      >
+        <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-normal tracking-tighter leading-none mb-8 text-[#11161A]">
+          Ensayos
+        </h1>
+        <p className="max-w-2xl text-base md:text-lg lg:text-xl opacity-60 font-light leading-relaxed">
+          Un archivo de pensamiento crítico, análisis cinematográfico y textos donde desmenuzamos lo que ocurre en la pantalla, fotograma a fotograma.
+        </p>
+      </motion.header>
 
-          return (
-            <section key={ensayo.id} className="grid grid-cols-1 lg:grid-cols-2 border-b border-black/10">
-              
-              {/* Bloque de Texto */}
-              {/* Si es par (isEven), el texto va primero (order-1). Si es impar, va segundo en pantallas grandes (lg:order-2) */}
-              <div className={`p-8 md:p-16 lg:p-24 flex flex-col justify-center ${bgColor}/40 ${isEven ? 'order-1' : 'order-1 lg:order-2'}`}> 
-                <span className="text-xs font-bold tracking-[0.2em] uppercase mb-6 text-black/50">
-                  {index === 0 ? "Ensayo Destacado" : ensayo.date}
-                </span>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.95] mb-6">
-                  {ensayo.title}
-                </h2>
-                <p className="text-lg text-black/70 mb-10 max-w-md leading-relaxed">
-                  {ensayo.excerpt}
-                </p>
-                <button className="self-start px-8 py-4 bg-black text-[#fdf5e6] text-xs font-bold tracking-[0.2em] uppercase hover:bg-black/80 transition-colors">
-                  Leer Ensayo
-                </button>
-              </div>
-              
-              {/* Bloque de Imagen */}
-              {/* Mantiene el efecto de blanco y negro a color */}
-              <div className={`aspect-square lg:aspect-auto w-full relative bg-black/5 overflow-hidden ${isEven ? 'order-2' : 'order-2 lg:order-1'}`}>
-                <img 
-                  src={ensayo.image} 
-                  alt={ensayo.title} 
-                  className="absolute inset-0 w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 hover:scale-105"
-                  onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop"; }}
-                />
-              </div>
+      {/* El <main> tiene 'relative z-10' y un fondo sólido. 
+          Al hacer scroll, esta "capa" se desliza por encima del header (z-0), tapándolo. */}
+      <main className="max-w-[1440px] mx-auto p-6 md:p-12 relative z-10 bg-[#FBF9F6] rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
+        
+        <div className="mb-16 flex items-center gap-3">
+          <div className="w-2 h-2 rounded-full bg-[#ff4500]"></div>
+          <h2 className="text-sm font-mono tracking-widest uppercase text-[#11161A]/70">
+            Catálogo Principal
+          </h2>
+        </div>
 
-            </section>
-          );
-        })}
-      </div>
-
-      {/* 3. LISTA DE ENTRADAS ANTERIORES CON PAGINACIÓN */}
-      {catalogEntries.length > 0 && (
-        <section className="max-w-7xl mx-auto px-6 py-16 md:px-12">
+        <div className="flex flex-col gap-16 md:gap-24">
           
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 border-b border-black/20 pb-4">
-            <h2 className="text-4xl font-black tracking-tighter">
-              entradas anteriores.
-            </h2>
+          {currentCatalog.map((ensayo, index) => {
+            const isDark = index % 2 === 0;
+            const isReverse = index % 2 !== 0;
+
+            const cardStyles = isDark 
+              ? "bg-[#11161A] text-white shadow-xl" 
+              : "bg-white text-[#11161A] border border-black/5 shadow-sm";
+
+            const btnStyles = isDark
+              ? "bg-[#ff4500] text-white hover:bg-[#e03d00]"
+              : "bg-transparent text-[#11161A] border border-black/10 hover:border-[#ff4500] hover:text-[#ff4500]";
+
+            // CORRECCIÓN 2: Lógica de Imagen Fallback
+            // Si ensayo.image existe en tu JSON, la usa. Si no, usa una de Picsum usando el ID como "semilla" para que no cambie cada vez que recargas.
+            const imageUrl = ensayo.image || `https://picsum.photos/seed/${ensayo.id || index}/800/800`;
+
+            return (
+              <motion.article 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }} 
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                key={ensayo.id} 
+                className={`p-6 md:p-12 lg:p-16 flex flex-col ${isReverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-16 items-center rounded-[2.5rem] ${cardStyles}`}
+              >
+                
+                <div className="w-full lg:w-1/2 flex flex-col justify-center">
+                  <div className="flex items-center gap-4 mb-8">
+                    <span className={`text-[10px] font-mono tracking-widest uppercase px-3 py-1 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}>
+                      ID_{ensayo.id?.toString().padStart(3, '0') || "000"}
+                    </span>
+                    <span className="text-[10px] font-mono tracking-widest uppercase opacity-50">
+                      {ensayo.date || "Fecha desconocida"}
+                    </span>
+                  </div>
+
+                  <h3 className="text-4xl lg:text-5xl xl:text-6xl font-normal tracking-tight leading-[1.05] mb-6">
+                    {ensayo.title}
+                  </h3>
+                  
+                  <p className="text-base lg:text-lg opacity-70 leading-relaxed font-light mb-10 max-w-xl">
+                    {ensayo.excerpt}
+                  </p>
+
+                  <button className={`w-fit px-8 py-4 rounded-full text-xs font-medium tracking-widest transition-all duration-300 ${btnStyles}`}>
+                    Leer Ensayo
+                  </button>
+                </div>
+
+                <div className="w-full lg:w-1/2 aspect-square relative rounded-[2rem] overflow-hidden group">
+                  <div className="absolute inset-0 bg-black/5 animate-pulse"></div>
+                  {/* Pasamos la URL calculada al tag img */}
+                  <img 
+                    src={imageUrl} 
+                    alt={`Referencia visual para ${ensayo.title}`}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                  <div className={`absolute inset-0 mix-blend-overlay opacity-20 transition-opacity duration-500 group-hover:opacity-0 ${isDark ? 'bg-black' : 'bg-[#ff4500]'}`}></div>
+                </div>
+
+              </motion.article>
+            );
+          })}
+        </div>
+
+        {/* PAGINACIÓN */}
+        <div className="flex justify-between items-center mt-24 py-6 border-t border-black/10">
+          <button 
+            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors disabled:opacity-30 disabled:hover:text-[#11161A]"
+          >
+            ← Atrás
+          </button>
+          
+          <div className="flex gap-2">
+             {[...Array(totalPages)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className={`w-2 h-2 rounded-full ${currentPage === i + 1 ? 'bg-[#ff4500]' : 'bg-black/10'}`}
+                />
+             ))}
           </div>
 
-          <div className="flex flex-col">
-            {currentCatalog.map((ensayo, index) => {
-              const dotColor = dotColors[index % dotColors.length];
-              return (
-                <article key={ensayo.id} className="group flex flex-col md:flex-row items-start md:items-center py-6 border-b border-black/10 hover:bg-white/40 transition-colors gap-6">
-                  <div className="w-full md:w-48 flex-shrink-0 flex items-center gap-4">
-                    <div className={`w-3 h-3 rounded-full ${dotColor}`}></div>
-                    <span className="text-lg font-bold tracking-widest uppercase">{ensayo.date}</span>
-                  </div>
-                  <div className="flex-grow">
-                    <h3 className="text-2xl font-black tracking-tight mb-2 group-hover:translate-x-2 transition-transform duration-300">
-                      {ensayo.title}
-                    </h3>
-                  </div>
-                  <div className="w-full md:w-auto flex-shrink-0 mt-2 md:mt-0">
-                    <button className="px-6 py-2 border-2 border-black text-xs font-bold tracking-[0.2em] uppercase group-hover:bg-black group-hover:text-[#fdf5e6] transition-colors">
-                      Leer
-                    </button>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-
-          {/* 4. NAVEGADOR DE PÁGINAS (Paginación) */}
-          <div className="flex justify-between items-center mt-12 pt-6 border-t border-black/20">
-            <button 
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="text-xs font-bold tracking-[0.2em] uppercase hover:opacity-50 transition-opacity disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              [ ← Más Recientes ]
-            </button>
-            <span className="text-xs font-bold tracking-widest text-black/40">
-              Página {currentPage} de {totalPages}
-            </span>
-            <button 
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
-              className="text-xs font-bold tracking-[0.2em] uppercase hover:opacity-50 transition-opacity disabled:opacity-20 disabled:cursor-not-allowed"
-            >
-              [ Más Antiguas → ]
-            </button>
-          </div>
-
-        </section>
-      )}
+          <button 
+            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors disabled:opacity-30 disabled:hover:text-[#11161A]"
+          >
+            Siguiente →
+          </button>
+        </div>
+      </main>
       
     </div>
   );
