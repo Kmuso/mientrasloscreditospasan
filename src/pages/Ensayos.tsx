@@ -1,12 +1,32 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // PASO 1: Importamos useEffect
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react'; 
-import database from '../../metadata.json'; 
+
+// PASO 2: ELIMINAMOS la importación estática de metadata.json
+// import database from '../../metadata.json'; 
 
 export default function Ensayos() {
+  // PASO 3: Creamos el "Lienzo" vacío para los datos. 
+  // Usamos <any[]> para que TypeScript sepa que aquí vendrán varios datos.
+  const [database, setDatabase] = useState<any[]>([]);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4; 
-  
+
+  // PASO 4: El "¡Acción!". Al cargar la página, pedimos los datos al servidor.
+  useEffect(() => {
+    fetch('http://localhost:3001/api/ensayos')
+      .then((respuesta) => respuesta.json())
+      .then((datos) => {
+        setDatabase(datos); // Llenamos el lienzo con los datos de SQLite
+      })
+      .catch((error) => console.error("Error en el carrete:", error));
+  }, []); 
+  // ^ El array vacío significa: "Haz esto solo 1 vez cuando la página cargue"
+
+  // PASO 5: ¡La magia de React! 
+  // Al inicio, database.length es 0. Pero cuando el fetch termina y hace "setDatabase", 
+  // React vuelve a leer esta parte y calcula las páginas correctamente.
   const totalPages = Math.ceil(database.length / itemsPerPage) || 1;
   const currentCatalog = database.slice(
     (currentPage - 1) * itemsPerPage,
@@ -30,8 +50,6 @@ export default function Ensayos() {
         </div>
       </nav>
 
-      {/* CORRECCIÓN 1: El título ahora tiene 'z-0' en lugar de '-z-10'. 
-          Queda en la capa base, pero por encima del fondo principal. */}
       <motion.header 
         style={{ opacity: headerOpacity, y: headerY }}
         className="max-w-[1440px] mx-auto px-6 md:px-12 pt-10 pb-24 text-center flex flex-col items-center justify-center sticky top-0 z-0"
@@ -44,8 +62,6 @@ export default function Ensayos() {
         </p>
       </motion.header>
 
-      {/* El <main> tiene 'relative z-10' y un fondo sólido. 
-          Al hacer scroll, esta "capa" se desliza por encima del header (z-0), tapándolo. */}
       <main className="max-w-[1440px] mx-auto p-6 md:p-12 relative z-10 bg-[#FBF9F6] rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
         
         <div className="mb-16 flex items-center gap-3">
@@ -56,7 +72,11 @@ export default function Ensayos() {
         </div>
 
         <div className="flex flex-col gap-16 md:gap-24">
-          
+          {/* Si aún no han llegado los datos, podemos mostrar un mensaje sutil */}
+          {database.length === 0 && (
+            <div className="text-center opacity-50 py-10">Cargando fotogramas...</div>
+          )}
+
           {currentCatalog.map((ensayo, index) => {
             const isDark = index % 2 === 0;
             const isReverse = index % 2 !== 0;
@@ -69,8 +89,6 @@ export default function Ensayos() {
               ? "bg-[#ff4500] text-white hover:bg-[#e03d00]"
               : "bg-transparent text-[#11161A] border border-black/10 hover:border-[#ff4500] hover:text-[#ff4500]";
 
-            // CORRECCIÓN 2: Lógica de Imagen Fallback
-            // Si ensayo.image existe en tu JSON, la usa. Si no, usa una de Picsum usando el ID como "semilla" para que no cambie cada vez que recargas.
             const imageUrl = ensayo.image || `https://picsum.photos/seed/${ensayo.id || index}/800/800`;
 
             return (
@@ -108,7 +126,6 @@ export default function Ensayos() {
 
                 <div className="w-full lg:w-1/2 aspect-square relative rounded-[2rem] overflow-hidden group">
                   <div className="absolute inset-0 bg-black/5 animate-pulse"></div>
-                  {/* Pasamos la URL calculada al tag img */}
                   <img 
                     src={imageUrl} 
                     alt={`Referencia visual para ${ensayo.title}`}
