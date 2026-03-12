@@ -119,9 +119,12 @@ export default function Ensayos() {
                     {ensayo.excerpt}
                   </p>
 
-                  <button className={`w-fit px-8 py-4 rounded-full text-xs font-medium tracking-widest transition-all duration-300 ${btnStyles}`}>
-                    Leer Ensayo
-                  </button>
+                  <Link 
+  to={`/ensayos/${ensayo.id}`} 
+  className={`w-fit px-8 py-4 rounded-full text-xs font-medium tracking-widest transition-all duration-300 ${btnStyles}`}
+>
+  Leer Ensayo
+</Link>
                 </div>
 
                 <div className="w-full lg:w-1/2 aspect-square relative rounded-[2rem] overflow-hidden group">
