@@ -6,7 +6,12 @@ import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight } from "lucide-react";
-import database from "../../metadata.json";
+
+// 1. Importamos el JSON con un nombre temporal
+import rawDatabase from "../../metadata.json";
+
+// 2. MAGIA: Le decimos a TypeScript que sea flexible con estos datos
+const database: any[] = rawDatabase;
 
 export default function Home() {
   const ultimasEntradas = database.slice(0, 4);

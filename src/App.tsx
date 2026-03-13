@@ -6,7 +6,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // 1. IMPORTAMOS TU NUEVA "PUERTA SECRETA"
-import MenuOverlay from "./components/MenuOverlay";
 import Navbar from "./components/Navbar";
 
 import Home from "./pages/Home";
@@ -25,7 +24,6 @@ export default function App() {
     <BrowserRouter>
       {/* 2. EL MENÚ GLOBAL 
           Al ponerlo aquí, el botón flotará por encima de cualquier página en la que estés. */}
-      <MenuOverlay />
       <Navbar />
       
       <Routes>
