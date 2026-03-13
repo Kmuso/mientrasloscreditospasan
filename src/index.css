@@ -1,22 +1,61 @@
-/* Importamos Cormorant Garamond (Serif) y Space Mono (Técnica) */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Space+Mono:ital,wght@0,400;0,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800;900&display=swap');
 @import "tailwindcss";
 
-@theme {
-  /* La fuente Serif para el look "Portrait" */
-  --font-serif: "Cormorant Garamond", serif;
-  /* La fuente técnica para metadatos */
-  --font-mono: "Space Mono", monospace;
+/* CAPA BASE (TEMA CLARO por defecto) 
+  Es como el fotograma 1 de nuestra animación.
+*/
+:root {
+  --bg-color: #FFFFFF; /* NUEVO: Blanco puro para el fondo claro */
+  --text-color: #0D0000; /* El texto se mantiene negro profundo */
   
-  --color-cream: #fdf5e6;
-  --color-ink: #1a1a1a;
-  /* El negro profundo para nuestro diseño nocturno */
-  --color-noir: #0a0a0a; 
+  --accent-primary: #BF2011;   
+  --accent-secondary: #400702; 
+  --accent-tertiary: #D99E6A;  
+
+  --hero-title: #0D0000;    
+  --hero-subtitle: #0D0000; 
 }
 
+/* CAPA OSCURA (TEMA OSCURO) 
+  Cuando a la etiqueta <html> le pongamos la clase "dark", 
+  estos valores sobreescribirán a los de arriba.
+*/
+/* CAPA OSCURA (TEMA OSCURO) */
+.dark {
+  --bg-color: #0D0000; /* El fondo se mantiene en negro profundo */
+  --text-color: #FFFFFF; /* NUEVO: Cambiamos la tinta general a blanco puro */
+
+  /* Pistas de color para el Hero (Tema Oscuro) */
+  --hero-title: #FFFFFF;    /* Título: Blanco puro */
+  --hero-subtitle: #BF2011; /* Subtítulo: Rojo intenso */
+}
+
+/* Le decimos a Tailwind que use nuestras variables 
+  para crear clases como bg-fondo o text-texto
+*/
+@theme {
+  /* NUESTRAS DOS FAMILIAS TIPOGRÁFICAS MAESTRAS */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Calluna", ui-serif, Georgia, serif; /* Añadimos Calluna como la fuente Serif principal */
+
+  /* Nuestras pistas de color que ya teníamos */
+  --color-fondo: var(--bg-color);
+  --color-texto: var(--text-color);
+  --color-primario: var(--accent-primary);
+  --color-secundario: var(--accent-secondary);
+  --color-terciario: var(--accent-tertiary);
+  --color-titulo-hero: var(--hero-title);
+  --color-subtitulo-hero: var(--hero-subtitle);
+}
+
+/* Aplicamos los colores al lienzo principal (el body)
+  Y le damos una transición de 0.5 segundos para que el cambio no sea brusco.
+*/
 body {
-  background-color: var(--color-cream);
-  color: var(--color-ink);
-  font-family: var(--font-serif); /* Cambiamos la base a Serif */
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
