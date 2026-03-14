@@ -27,24 +27,36 @@ export default function MenuOverlay() {
     { name: "Contacto", path: "/contacto" },
   ];
 
+  // APLANAMOS LA ANIMACIÓN: El menú padre ahora controla el tiempo de los hijos
   const menuVars = {
     initial: { scaleY: 0, transformOrigin: "top" },
-    animate: { scaleY: 1, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } },
-    exit: { scaleY: 0, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
-  };
-
-  const containerVars = {
-    animate: { transition: { staggerChildren: 0.08, delayChildren: 0.3 } },
+    animate: { 
+      scaleY: 1, 
+      transition: { 
+        duration: 0.6, 
+        ease: [0.22, 1, 0.36, 1],
+        staggerChildren: 0.08, // Le dice a los textos que salgan uno tras otro
+        delayChildren: 0.3     // Espera a que el fondo baje para empezar a mostrar letras
+      } 
+    },
+    exit: { 
+      scaleY: 0, 
+      transition: { 
+        duration: 0.5, 
+        ease: [0.22, 1, 0.36, 1] 
+      } 
+    },
   };
 
   const itemVars = {
     initial: { opacity: 0, y: 15 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+    exit: { opacity: 0 } // Desaparecen al instante al cerrar el menú
   };
 
   return (
     <>
-      {/* EL BOTÓN HAMBURGUESA (Adaptado para vivir en la marquesina) */}
+      {/* EL BOTÓN HAMBURGUESA (Mantiene el camuflaje oscuro/claro) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="relative z-50 flex flex-col gap-[6px] p-2 hover:opacity-70 transition-opacity"
@@ -52,11 +64,11 @@ export default function MenuOverlay() {
       >
         <motion.div 
           animate={isOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }} 
-          className={`w-8 h-[2px] ${isOpen ? 'bg-[#FBF9F6]' : 'bg-[#11161A]'}`} 
+          className={`w-8 h-[2px] transition-colors duration-300 ${isOpen ? 'bg-[#FBF9F6]' : 'bg-texto'}`} 
         />
         <motion.div 
           animate={isOpen ? { rotate: -45, y: -0 } : { rotate: 0, y: 0 }} 
-          className={`w-8 h-[2px] ${isOpen ? 'bg-[#FBF9F6]' : 'bg-[#11161A]'}`} 
+          className={`w-8 h-[2px] transition-colors duration-300 ${isOpen ? 'bg-[#FBF9F6]' : 'bg-texto'}`} 
         />
       </button>
 
@@ -69,12 +81,9 @@ export default function MenuOverlay() {
             exit="exit"
             className="fixed inset-0 bg-[#11161A] text-[#FBF9F6] z-40 flex flex-col p-6 md:p-12 xl:p-20 overflow-y-auto"
           >
-            <motion.div 
-              variants={containerVars} 
-              initial="initial" 
-              animate="animate"
-              className="flex flex-col justify-between h-full min-h-max mt-16 md:mt-0 max-w-7xl mx-auto w-full"
-            >
+            {/* CAMBIO CLAVE: Cambiamos este motion.div por un div normal. 
+                De esta forma no cortamos la señal de animación del padre a los textos. */}
+            <div className="flex flex-col justify-between h-full min-h-max mt-16 md:mt-0 max-w-7xl mx-auto w-full">
               
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 flex-grow">
                 
@@ -125,7 +134,6 @@ export default function MenuOverlay() {
                 {/* COLUMNA DERECHA (Buscador + Entradas) */}
                 <div className="flex flex-col justify-center lg:col-span-5 pt-8 lg:pt-0 pl-0 lg:pl-12">
                   
-                  {/* LA NUEVA BARRA DE BÚSQUEDA */}
                   <motion.div variants={itemVars} className="mb-12 relative group">
                     <svg className="absolute left-0 top-1/2 -translate-y-1/2 w-4 h-4 text-[#FBF9F6] opacity-40 group-focus-within:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                       <circle cx="11" cy="11" r="8"></circle>
@@ -138,7 +146,6 @@ export default function MenuOverlay() {
                     />
                   </motion.div>
 
-                  {/* ÚLTIMAS ENTRADAS */}
                   <div className="flex flex-col gap-6">
                     <motion.h3 variants={itemVars} className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-2">
                       Añadidos Recientemente
@@ -191,7 +198,7 @@ export default function MenuOverlay() {
                 </div>
               </motion.div>
 
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
