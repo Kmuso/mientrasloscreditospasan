@@ -1,32 +1,22 @@
-import { useState, useEffect } from 'react'; // PASO 1: Importamos useEffect
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'motion/react'; 
 
-// PASO 2: ELIMINAMOS la importación estática de metadata.json
-// import database from '../../metadata.json'; 
-
 export default function Ensayos() {
-  // PASO 3: Creamos el "Lienzo" vacío para los datos. 
-  // Usamos <any[]> para que TypeScript sepa que aquí vendrán varios datos.
   const [database, setDatabase] = useState<any[]>([]);
-  
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 4; 
 
-  // PASO 4: El "¡Acción!". Al cargar la página, pedimos los datos al servidor.
+  // Tu conexión al Backend se mantiene intacta
   useEffect(() => {
     fetch('http://localhost:3001/api/ensayos')
       .then((respuesta) => respuesta.json())
       .then((datos) => {
-        setDatabase(datos); // Llenamos el lienzo con los datos de SQLite
+        setDatabase(datos);
       })
       .catch((error) => console.error("Error en el carrete:", error));
   }, []); 
-  // ^ El array vacío significa: "Haz esto solo 1 vez cuando la página cargue"
 
-  // PASO 5: ¡La magia de React! 
-  // Al inicio, database.length es 0. Pero cuando el fetch termina y hace "setDatabase", 
-  // React vuelve a leer esta parte y calcula las páginas correctamente.
   const totalPages = Math.ceil(database.length / itemsPerPage) || 1;
   const currentCatalog = database.slice(
     (currentPage - 1) * itemsPerPage,
@@ -38,14 +28,32 @@ export default function Ensayos() {
   const headerY = useTransform(scrollY, [0, 300], [0, -50]);
 
   return (
-    <div className="min-h-screen bg-[#FBF9F6] text-[#11161A] font-sans selection:bg-[#ff4500] selection:text-white 
-      bg-[radial-gradient(#ff450030_1.5px,transparent_1.5px)] bg-[size:36px_36px]">
+    // CAMBIO 1: bg-fondo y text-texto controlan el lienzo maestro. 
+    // selection:bg-primario resalta el texto con tu color rojo intenso.
+    <div className="min-h-screen bg-fondo text-texto font-sans selection:bg-primario selection:text-fondo transition-colors duration-700 relative">
+      
+      {/* CAMBIO 2: La "Capa de Trama". Usamos un div absoluto con opacidad para hacer los puntos dinámicos usando tu variable --color-primario */}
+{/* LA RETÍCULA EDITORIAL (Cuadrícula) 
+          Usamos linear-gradient para trazar una línea vertical y otra horizontal.
+          Le asignamos 'var(--color-texto)' para que sea negra en claro y blanca en oscuro.
+          La opacidad está al 5% (opacity-[0.05]) para que sea súper sutil y no estorbe la lectura.
+      */}
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-[0.04] transition-opacity duration-700 z-0 mix-blend-difference" 
+        style={{ 
+          backgroundImage: `
+            linear-gradient(to right, var(--color-texto) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--color-texto) 1px, transparent 1px)
+          `, 
+          backgroundSize: "64px 64px" /* Tamaño de cada cuadrado de la grilla */
+        }}
+      ></div>
       
       <nav className="px-6 py-10 md:px-12 flex justify-between items-center max-w-[1440px] mx-auto relative z-20">
-        <Link to="/" className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors flex items-center gap-2">
-          <span className="text-[#ff4500]">←</span> Volver al Inicio
+        <Link to="/" className="text-xs font-medium tracking-[0.15em] uppercase hover:text-primario transition-colors flex items-center gap-2">
+          <span className="text-primario transition-colors duration-500">←</span> Volver al Inicio
         </Link>
-        <div className="text-xs font-medium tracking-[0.15em] uppercase text-[#11161A]/50">
+        <div className="text-xs font-medium tracking-[0.15em] uppercase opacity-50">
           Archivo Textual
         </div>
       </nav>
@@ -54,40 +62,44 @@ export default function Ensayos() {
         style={{ opacity: headerOpacity, y: headerY }}
         className="max-w-[1440px] mx-auto px-6 md:px-12 pt-10 pb-24 text-center flex flex-col items-center justify-center sticky top-0 z-0"
       >
-        <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-normal tracking-tighter leading-none mb-8 text-[#11161A]">
+        {/* CAMBIO 3: font-serif (Calluna) para el título gigante */}
+        <h1 className="text-7xl md:text-8xl lg:text-[10rem] font-serif font-bold tracking-tighter leading-none mb-8 text-texto transition-colors duration-700">
           Ensayos
         </h1>
-        <p className="max-w-2xl text-base md:text-lg lg:text-xl opacity-60 font-light leading-relaxed">
+        {/* font-sans (Inter) para el párrafo descriptivo */}
+        <p className="max-w-2xl text-base md:text-lg lg:text-xl font-sans font-light leading-relaxed opacity-70">
           Un archivo de pensamiento crítico, análisis cinematográfico y textos donde desmenuzamos lo que ocurre en la pantalla, fotograma a fotograma.
         </p>
       </motion.header>
 
-      <main className="max-w-[1440px] mx-auto p-6 md:p-12 relative z-10 bg-[#FBF9F6] rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.02)]">
+      {/* CAMBIO 4: bg-fondo asegura que esta caja que sube sobre el sticky respete el tema */}
+      <main className="max-w-[1440px] mx-auto p-6 md:p-12 relative z-10 bg-fondo transition-colors duration-700 rounded-t-[3rem] shadow-[0_-10px_40px_rgba(0,0,0,0.05)] dark:shadow-[0_-10px_40px_rgba(255,255,255,0.02)]">
         
         <div className="mb-16 flex items-center gap-3">
-          <div className="w-2 h-2 rounded-full bg-[#ff4500]"></div>
-          <h2 className="text-sm font-mono tracking-widest uppercase text-[#11161A]/70">
+          <div className="w-2 h-2 rounded-full bg-primario transition-colors duration-500"></div>
+          <h2 className="text-sm font-sans font-medium tracking-widest uppercase opacity-70">
             Catálogo Principal
           </h2>
         </div>
 
         <div className="flex flex-col gap-16 md:gap-24">
-          {/* Si aún no han llegado los datos, podemos mostrar un mensaje sutil */}
           {database.length === 0 && (
-            <div className="text-center opacity-50 py-10">Cargando fotogramas...</div>
+            <div className="text-center opacity-50 py-10 font-sans">Cargando fotogramas...</div>
           )}
 
           {currentCatalog.map((ensayo, index) => {
-            const isDark = index % 2 === 0;
+            // El "Negativo Dinámico"
+            const isInverted = index % 2 === 0;
             const isReverse = index % 2 !== 0;
 
-            const cardStyles = isDark 
-              ? "bg-[#11161A] text-white shadow-xl" 
-              : "bg-white text-[#11161A] border border-black/5 shadow-sm";
+            // Si está invertido, usa el color de texto como fondo (negro en tema claro, blanco en oscuro)
+            const cardStyles = isInverted 
+              ? "bg-texto text-fondo shadow-xl" 
+              : "bg-fondo text-texto border border-texto/10 shadow-sm";
 
-            const btnStyles = isDark
-              ? "bg-[#ff4500] text-white hover:bg-[#e03d00]"
-              : "bg-transparent text-[#11161A] border border-black/10 hover:border-[#ff4500] hover:text-[#ff4500]";
+            const btnStyles = isInverted
+              ? "bg-primario text-fondo hover:opacity-80 border border-transparent"
+              : "bg-transparent text-texto border border-texto/20 hover:border-primario hover:text-primario";
 
             const imageUrl = ensayo.image || `https://picsum.photos/seed/${ensayo.id || index}/800/800`;
 
@@ -98,43 +110,45 @@ export default function Ensayos() {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                 key={ensayo.id} 
-                className={`p-6 md:p-12 lg:p-16 flex flex-col ${isReverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-16 items-center rounded-[2.5rem] ${cardStyles}`}
+                className={`p-6 md:p-12 lg:p-16 flex flex-col ${isReverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} gap-12 lg:gap-16 items-center rounded-[2.5rem] transition-colors duration-700 ${cardStyles}`}
               >
                 
                 <div className="w-full lg:w-1/2 flex flex-col justify-center">
                   <div className="flex items-center gap-4 mb-8">
-                    <span className={`text-[10px] font-mono tracking-widest uppercase px-3 py-1 rounded-full ${isDark ? 'bg-white/10' : 'bg-black/5'}`}>
+                    <span className={`text-[10px] font-sans font-medium tracking-widest uppercase px-3 py-1 rounded-full transition-colors duration-700 ${isInverted ? 'bg-fondo/20' : 'bg-texto/5'}`}>
                       ID_{ensayo.id?.toString().padStart(3, '0') || "000"}
                     </span>
-                    <span className="text-[10px] font-mono tracking-widest uppercase opacity-50">
+                    <span className="text-[10px] font-sans font-medium tracking-widest uppercase opacity-50">
                       {ensayo.date || "Fecha desconocida"}
                     </span>
                   </div>
 
-                  <h3 className="text-4xl lg:text-5xl xl:text-6xl font-normal tracking-tight leading-[1.05] mb-6">
+                  {/* CAMBIO 5: font-serif para los títulos de las tarjetas */}
+                  <h3 className="text-4xl lg:text-5xl xl:text-6xl font-serif font-bold tracking-tight leading-[1.05] mb-6">
                     {ensayo.title}
                   </h3>
                   
-                  <p className="text-base lg:text-lg opacity-70 leading-relaxed font-light mb-10 max-w-xl">
+                  <p className="text-base lg:text-lg opacity-70 leading-relaxed font-sans font-light mb-10 max-w-xl">
                     {ensayo.excerpt}
                   </p>
 
                   <Link 
-  to={`/ensayos/${ensayo.id}`} 
-  className={`w-fit px-8 py-4 rounded-full text-xs font-medium tracking-widest transition-all duration-300 ${btnStyles}`}
->
-  Leer Ensayo
-</Link>
+                    to={`/ensayos/${ensayo.id}`} 
+                    className={`w-fit px-8 py-4 rounded-full text-xs font-sans font-semibold tracking-widest transition-all duration-300 ${btnStyles}`}
+                  >
+                    Leer Ensayo
+                  </Link>
                 </div>
 
                 <div className="w-full lg:w-1/2 aspect-square relative rounded-[2rem] overflow-hidden group">
-                  <div className="absolute inset-0 bg-black/5 animate-pulse"></div>
+                  <div className="absolute inset-0 bg-texto/5 animate-pulse"></div>
                   <img 
                     src={imageUrl} 
                     alt={`Referencia visual para ${ensayo.title}`}
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className={`absolute inset-0 mix-blend-overlay opacity-20 transition-opacity duration-500 group-hover:opacity-0 ${isDark ? 'bg-black' : 'bg-[#ff4500]'}`}></div>
+                  {/* Máscara de color dinámica */}
+                  <div className={`absolute inset-0 mix-blend-overlay opacity-20 transition-opacity duration-500 group-hover:opacity-0 ${isInverted ? 'bg-fondo' : 'bg-primario'}`}></div>
                 </div>
 
               </motion.article>
@@ -143,11 +157,11 @@ export default function Ensayos() {
         </div>
 
         {/* PAGINACIÓN */}
-        <div className="flex justify-between items-center mt-24 py-6 border-t border-black/10">
+        <div className="flex justify-between items-center mt-24 py-6 border-t border-texto/10 transition-colors duration-700">
           <button 
             onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
             disabled={currentPage === 1}
-            className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors disabled:opacity-30 disabled:hover:text-[#11161A]"
+            className="text-xs font-sans font-medium tracking-[0.15em] uppercase hover:text-primario transition-colors disabled:opacity-30 disabled:hover:text-texto"
           >
             ← Atrás
           </button>
@@ -156,7 +170,7 @@ export default function Ensayos() {
              {[...Array(totalPages)].map((_, i) => (
                 <div 
                   key={i} 
-                  className={`w-2 h-2 rounded-full ${currentPage === i + 1 ? 'bg-[#ff4500]' : 'bg-black/10'}`}
+                  className={`w-2 h-2 rounded-full transition-colors duration-500 ${currentPage === i + 1 ? 'bg-primario' : 'bg-texto/10'}`}
                 />
              ))}
           </div>
@@ -164,7 +178,7 @@ export default function Ensayos() {
           <button 
             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
             disabled={currentPage === totalPages}
-            className="text-xs font-medium tracking-[0.15em] uppercase hover:text-[#ff4500] transition-colors disabled:opacity-30 disabled:hover:text-[#11161A]"
+            className="text-xs font-sans font-medium tracking-[0.15em] uppercase hover:text-primario transition-colors disabled:opacity-30 disabled:hover:text-texto"
           >
             Siguiente →
           </button>

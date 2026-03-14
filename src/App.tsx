@@ -37,20 +37,28 @@ export default function App() {
   return (
     <BrowserRouter>
       
-      {/* EL INTERRUPTOR GLOBAL */}
+{/* EL INTERRUPTOR GLOBAL */}
       <button 
         onClick={() => setIsDark(!isDark)}
-        /* Cambiamos right-6 a right-24 y p-3 a p-2.5 para refinar el tamaño */
         className="fixed top-5 right-36 z-[9999] p-2.5 rounded-full border border-texto text-texto hover:bg-texto hover:text-fondo transition-all duration-300"
         aria-label="Cambiar Tema"
       >
         {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
       </button>
 
-      {/* NUEVO: 2. AQUÍ COLOCAMOS TU NAVBAR GLOBAL
-          Al ponerla fuera de <Routes>, se renderizará en todas las páginas 
-          sin tener que copiarla y pegarla en cada una.
-      */}
+      {/* NUEVO: LA TEXTURA GLOBAL (CUADRÍCULA) PARA TODAS LAS PÁGINAS */}
+      <div 
+        className="fixed inset-0 pointer-events-none opacity-[0.04] transition-opacity duration-700 z-0 mix-blend-difference" 
+        style={{ 
+          backgroundImage: `
+            linear-gradient(to right, var(--color-texto) 1px, transparent 1px),
+            linear-gradient(to bottom, var(--color-texto) 1px, transparent 1px)
+          `, 
+          backgroundSize: "64px 64px" 
+        }}
+      ></div>
+
+      {/* AQUÍ COLOCAMOS TU NAVBAR GLOBAL */}
       <Navbar />
 
       <Routes>
