@@ -4,18 +4,16 @@
  */
 import { useRef } from "react";
 import { Link } from "react-router-dom";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react"; // Asegurado que use motion/react
 import { ArrowRight } from "lucide-react";
 
 import rawDatabase from "../../metadata.json";
 
-// MAGIA: Le decimos a TypeScript que sea flexible con estos datos
 const database: any[] = rawDatabase;
 
 export default function Home() {
   const ultimasEntradas = database.slice(0, 4);
 
-  // Datos para Ilustraciones
   const ilustraciones = [
     { id: 1, title: "El Resplandor", img: "https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?q=80&w=800&auto=format&fit=crop" },
     { id: 2, title: "Blade Runner", img: "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop" },
@@ -24,7 +22,6 @@ export default function Home() {
     { id: 5, title: "Vertigo", img: "https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=800&auto=format&fit=crop" },
   ];
 
-  // Datos de Navegación
   const mainLinks = ["Ensayos", "Videos", "Podcast"];
   const secondaryLinks = [
     { name: "Biblioteca", path: "/biblioteca" },
@@ -33,7 +30,6 @@ export default function Home() {
     { name: "Contacto", path: "/contacto" },
   ];
 
-  // Variantes de Animación del Hero
   const containerVars = {
     animate: { transition: { staggerChildren: 0.2 } },
   };
@@ -43,7 +39,6 @@ export default function Home() {
     animate: { y: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } },
   };
 
-  // Lógica de Scroll (Video)
   const videoContainerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress: videoScroll } = useScroll({
     target: videoContainerRef,
@@ -53,10 +48,12 @@ export default function Home() {
   const borderRadius = useTransform(videoScroll, [0, 1], ["40px", "0px"]);
 
   return (
-    <div className="bg-fondo text-texto selection:bg-texto selection:text-fondo min-h-screen font-sans transition-colors duration-700">
+    // CAMBIO IMPORTANTE: Quitamos min-h-screen de aquí arriba, ya no es necesario
+    <div className="bg-fondo text-texto selection:bg-texto selection:text-fondo font-sans transition-colors duration-700">
       
       {/* SECCIÓN 1: EL HERO MINIMALISTA */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden">
+      {/* CAMBIO: Usamos h-screen fijo (100vh virtual) para que siempre mida la pantalla exacta */}
+      <section className="relative h-[100vh] w-full flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden">
         <motion.main variants={containerVars} initial="initial" animate="animate" className="text-center flex flex-col items-center">
           <div className="overflow-hidden py-2">
             <motion.h1 variants={wordVars} className="text-[4vw] leading-[0.8] font-serif font-bold tracking-[-0.05em] text-titulo-hero transition-colors duration-500">
