@@ -1,61 +1,169 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;800;900&display=swap');
+/* 1. IMPORTAMOS NUESTRAS TIPOGRAFÍAS MAESTRAS */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@200..900&family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;800;900&display=swap');
 @import "tailwindcss";
 
-/* CAPA BASE (TEMA CLARO por defecto) 
-  Es como el fotograma 1 de nuestra animación.
+/* =========================================
+   LAS 3 ÉPOCAS DEL CINE (CAPAS DE AJUSTE)
+========================================= */
+
+/* ÉPOCA 1: MODERNA (Por defecto) 
+   Estilo editorial, minimalista, mucho aire (whitespace) y acentos elegantes.
 */
-:root {
-  --bg-color: #FFFFFF; /* NUEVO: Blanco puro para el fondo claro */
-  --text-color: #0D0000; /* El texto se mantiene negro profundo */
+:root, .theme-moderna {
+  /* 1. EL LIENZO (Luz de galería) */
+  --bg-color: #FFFFFF;   
+  --text-color: #0D0000; 
+
+  /* NUEVO: LUZ DE TÍTULOS -> Rojo Carmesí */
+  --title-color: #BF2011;
+
+  /* 2. LOS ACENTOS (Sobrios y directos) */
+  --cine-red: #BF2011;   
+  --cine-gold: #344326;  /* Tu tono verde/oliva elegante mantenido */
+  --cine-green: #1A1A1A; 
+
+  /* 3. ESTRUCTURA DE SECCIONES (Fondos sutiles) */
+  --cine-sand: #F7F7F7;  
+  --cine-blue: #050505;  
+}
+
+/* ÉPOCA 2: TECHNICOLOR (Paleta Wes Anderson / Retro-Pop) 
+   Un lienzo dorado con explosiones de colores pastel y vibrantes.
+*/
+.theme-technicolor {
+  /* 1. EL LIENZO MAESTRO */
+  --bg-color: #F2DC9B;   
+  --text-color: #0D0000; 
   
-  --accent-primary: #BF2011;   
-  --accent-secondary: #400702; 
-  --accent-tertiary: #D99E6A;  
+  /* NUEVO: LUZ DE TÍTULOS -> Verde Menta */
+  --title-color: #1ABD87;
 
-  --hero-title: #0D0000;    
-  --hero-subtitle: #0D0000; 
+  /* 2. LOS CONTRASTES (Los muebles de la escenografía) */
+  --cine-red: #F25749;   
+  --cine-blue: #7395D9;  
+  --cine-green: #1ABD87; 
+  
+  /* 3. EL TRUCO DE DISEÑO */
+  --cine-sand: #F2C53D;  
+  --cine-gold: #F25749;  
 }
 
-/* CAPA OSCURA (TEMA OSCURO) 
-  Cuando a la etiqueta <html> le pongamos la clase "dark", 
-  estos valores sobreescribirán a los de arriba.
+/* ÉPOCA 3: CINE CLÁSICO (Noir / Celuloide Oscuro) 
+   Simula una sala a oscuras, alto contraste, celuloide de haluro de plata.
 */
-/* CAPA OSCURA (TEMA OSCURO) */
-.dark {
-  --bg-color: #0D0000; /* El fondo se mantiene en negro profundo */
-  --text-color: #FFFFFF; /* NUEVO: Cambiamos la tinta general a blanco puro */
+.theme-clasico {
+  --bg-color: #0A0A0A;   
+  --text-color: #F5F5F5; 
 
-  /* Pistas de color para el Hero (Tema Oscuro) */
-  --hero-title: #FFFFFF;    /* Título: Blanco puro */
-  --hero-subtitle: #BF2011; /* Subtítulo: Rojo intenso */
+  /* NUEVO: LUZ DE TÍTULOS -> Blanco Crudo para máximo contraste */
+  --title-color: #F5F5F5;
+
+  /* Botones y acentos pasan a ser grises claros para resaltar sobre el negro */
+  --cine-red: #D4D4D4;   
+  --cine-green: #4A4A4A; 
+  --cine-gold: #A3A3A3;  
+
+  /* Fondos de sección para generar profundidad */
+  --cine-sand: #141414;  
+  --cine-blue: #1F1F1F;  
 }
 
-/* Le decimos a Tailwind que use nuestras variables 
-  para crear clases como bg-fondo o text-texto
-*/
+/* =========================================
+   REGISTRO EN TAILWIND Y ANIMACIONES BASE
+========================================= */
 @theme {
-  /* NUESTRAS DOS FAMILIAS TIPOGRÁFICAS MAESTRAS */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Calluna", ui-serif, Georgia, serif; /* Añadimos Calluna como la fuente Serif principal */
+  --font-display: "Crimson Pro", serif;
+  --font-serif: "Crimson Text", serif;
 
-  /* Nuestras pistas de color que ya teníamos */
   --color-fondo: var(--bg-color);
   --color-texto: var(--text-color);
-  --color-primario: var(--accent-primary);
-  --color-secundario: var(--accent-secondary);
-  --color-terciario: var(--accent-tertiary);
-  --color-titulo-hero: var(--hero-title);
-  --color-subtitulo-hero: var(--hero-subtitle);
+  
+  /* REGISTRAMOS EL COLOR DEL TÍTULO EN TAILWIND */
+  --color-titulo: var(--title-color);
+
+  --color-cine-red: var(--cine-red);
+  --color-cine-green: var(--cine-green);
+  --color-cine-sand: var(--cine-sand);
+  --color-cine-gold: var(--cine-gold);
+  --color-cine-blue: var(--cine-blue);
 }
 
-/* Aplicamos los colores al lienzo principal (el body)
-  Y le damos una transición de 0.5 segundos para que el cambio no sea brusco.
-*/
+/* Transiciones para que el cambio de época sea fluido */
 body {
   background-color: var(--color-fondo);
   color: var(--color-texto);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.5s ease, color 0.5s ease;
+  transition: background-color 0.7s ease, color 0.7s ease;
+}
+
+div, section, article, span, h1, h2, h3, h4 {
+  transition: background-color 0.7s ease, border-color 0.7s ease, color 0.7s ease;
+}
+
+/* =========================================
+   CAPA DE CELULOIDE: GRANO DE PELÍCULA (GPU OPTIMIZED)
+========================================= */
+
+.film-grain {
+  position: fixed;
+  top: -150px;
+  left: -150px;
+  right: -150px;
+  bottom: -150px;
+  pointer-events: none; 
+  z-index: 50; 
+  
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  background-repeat: repeat; 
+  background-size: 120px 120px; 
+  
+  opacity: 0.06; 
+  animation: grain-jitter 0.4s steps(1) infinite;
+}
+
+.theme-clasico .film-grain {
+  opacity: 0.09;
+}
+
+@keyframes grain-jitter {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  10% { transform: translate3d(-15px, -25px, 0); }
+  20% { transform: translate3d(25px, -45px, 0); }
+  30% { transform: translate3d(-20px, 25px, 0); }
+  40% { transform: translate3d(35px, -20px, 0); }
+  50% { transform: translate3d(-30px, 35px, 0); }
+  60% { transform: translate3d(20px, -30px, 0); }
+  70% { transform: translate3d(-40px, -50px, 0); }
+  80% { transform: translate3d(30px, 35px, 0); }
+  90% { transform: translate3d(-20px, 15px, 0); }
+}
+
+/* =========================================
+   COMPORTAMIENTO VISUAL SEGÚN EL TEMA
+========================================= */
+
+/* 1. ESTADO NORMAL (Contemporáneo y Technicolor) */
+.img-theme-aware, 
+iframe, 
+video {
+  filter: grayscale(0%);
+  transition: filter 0.7s ease; /* Transición suave como un fundido de cine */
+}
+
+/* 2. ESTADO NOIR (Clásico) 
+   Aplicamos el filtro a imágenes, videos nativos y IFRAMES (YouTube)
+*/
+.theme-clasico .img-theme-aware,
+.theme-clasico iframe,
+.theme-clasico video {
+  /* Grayscale al 100% y subimos un poco el contraste para que los negros sean más profundos */
+  filter: grayscale(100%) contrast(110%) brightness(90%);
+}
+
+/* Nota: mix-blend-mode puede ayudar a que los videos se integren mejor con el grano */
+.theme-clasico .film-grain {
+  opacity: 0.12; /* Grano un poco más fuerte en Noir para enfatizar la textura */
 }

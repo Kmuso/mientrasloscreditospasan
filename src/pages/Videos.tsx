@@ -36,8 +36,8 @@ export default function Videos() {
   ];
 
   return (
-    // CAMBIO 1: El lienzo maestro (bg-fondo, text-texto)
-    <main className="min-h-screen bg-fondo text-texto px-6 py-12 md:py-20 selection:bg-primario selection:text-fondo transition-colors duration-700 relative z-10 font-sans">
+    // CAMBIO 1: bg-fondo y text-texto para el lienzo general. selection:bg-cine-red para selección de texto.
+    <main className="min-h-screen bg-fondo text-texto px-6 py-12 md:py-20 selection:bg-cine-red selection:text-fondo transition-colors duration-700 relative z-10 font-sans">
       <div className="max-w-[1440px] mx-auto">
         
         {/* =========================================
@@ -47,15 +47,16 @@ export default function Videos() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          // CAMBIO 2: Bordes dinámicos
           className="flex flex-col md:flex-row md:items-end justify-between border-b border-texto/10 pb-10 mb-12 gap-6 transition-colors duration-700"
         >
           <div>
             <h2 className="text-[10px] font-mono tracking-widest uppercase opacity-50 mb-4">
               Sala de Proyección
             </h2>
-            <h1 className="text-4xl md:text-6xl font-serif font-bold tracking-tighter leading-none transition-colors duration-700">
-              Ensayos en <span className="text-primario italic transition-colors duration-500">Video.</span>
+            {/* TÍTULO PRINCIPAL: Cambiamos a 'text-titulo' */}
+            <h1 className="text-4xl md:text-6xl font-serif font-bold tracking-tighter leading-none text-titulo transition-colors duration-700">
+              {/* ACENTO ITÁLICO: Cambiamos text-primario por 'text-cine-red' */}
+              Ensayos en <span className="text-cine-red italic transition-colors duration-700">Video.</span>
             </h1>
           </div>
           <p className="max-w-xs text-sm font-sans font-medium opacity-70 leading-relaxed md:text-right">
@@ -75,8 +76,8 @@ export default function Videos() {
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
             
             {/* El Reproductor de YouTube */}
-            {/* Mantenemos bg-black puro para el video, pero con un borde dinámico muy sutil */}
-            <div className="w-full lg:w-3/4 aspect-video bg-black border border-texto/5 shadow-xl transition-colors duration-700">
+            {/* FONDO DE VIDEO: Usamos 'bg-cine-blue' para que el fondo trasero del iframe cambie sutilmente */}
+            <div className="w-full lg:w-3/4 aspect-video bg-cine-blue border border-texto/5 shadow-xl transition-colors duration-700">
               <iframe 
                 className="w-full h-full"
                 src={`https://www.youtube.com/embed/${videoDestacado.youtubeId}?modestbranding=1&rel=0`} 
@@ -90,8 +91,8 @@ export default function Videos() {
             {/* La Ficha Técnica del Estreno */}
             <div className="w-full lg:w-1/4 flex flex-col justify-center">
               <div className="flex items-center gap-3 mb-4">
-                {/* CAMBIO 3: Etiqueta en "Negativo Dinámico" (bg-texto y text-fondo) */}
-                <span className="text-[10px] font-mono tracking-widest uppercase bg-texto text-fondo px-3 py-1 transition-colors duration-700">
+                {/* ETIQUETA 'ESTRENO': Fondo 'bg-cine-red' para que salte a la vista */}
+                <span className="text-[10px] font-mono tracking-widest uppercase bg-cine-red text-white px-3 py-1 transition-colors duration-700">
                   Estreno
                 </span>
                 <span className="text-[10px] font-mono tracking-widest uppercase opacity-50">
@@ -99,8 +100,8 @@ export default function Videos() {
                 </span>
               </div>
               
-              {/* CAMBIO 4: font-serif para el título del ensayo */}
-              <h3 className="text-3xl md:text-4xl font-serif font-bold leading-tight mb-6 transition-colors duration-700">
+              {/* TÍTULO DEL ENSAYO: Usamos 'text-titulo' */}
+              <h3 className="text-3xl md:text-4xl font-serif font-bold text-titulo leading-tight mb-6 transition-colors duration-700">
                 {videoDestacado.title}
               </h3>
               
@@ -108,8 +109,8 @@ export default function Videos() {
                 {videoDestacado.description}
               </p>
 
-              {/* Botón hacia YouTube con acento dinámico */}
-              <button className="self-start text-[10px] font-bold uppercase tracking-widest border-b-2 border-primario pb-1 text-texto hover:text-primario transition-colors duration-300">
+              {/* Botón hacia YouTube: Cambiamos text-primario por 'text-cine-red' */}
+              <button className="self-start text-[10px] font-bold uppercase tracking-widest border-b-2 border-cine-red pb-1 text-texto hover:text-cine-red transition-colors duration-300">
                 Ver en YouTube ↗
               </button>
             </div>
@@ -126,7 +127,8 @@ export default function Videos() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8 }}
         >
-          <h3 className="text-xl font-serif font-bold uppercase tracking-tight border-b border-texto/10 pb-4 mb-8 transition-colors duration-700">
+          {/* TÍTULO DE SECCIÓN: Usamos 'text-titulo' */}
+          <h3 className="text-xl font-serif font-bold text-titulo uppercase tracking-tight border-b border-texto/10 pb-4 mb-8 transition-colors duration-700">
             Archivo Audiovisual
           </h3>
 
@@ -142,7 +144,7 @@ export default function Videos() {
                 className="flex flex-col group cursor-pointer"
               >
                 {/* Reproductor Pequeño */}
-                <div className="w-full aspect-video bg-black border border-texto/5 mb-6 shadow-md transition-all duration-500 group-hover:-translate-y-1">
+                <div className="w-full aspect-video bg-cine-blue border border-texto/5 mb-6 shadow-md transition-all duration-500 group-hover:-translate-y-1">
                   <iframe 
                     className="w-full h-full pointer-events-none"
                     src={`https://www.youtube.com/embed/${video.youtubeId}?modestbranding=1&rel=0`} 
@@ -155,7 +157,8 @@ export default function Videos() {
 
                 {/* Metadatos */}
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-[10px] font-mono tracking-widest uppercase text-primario transition-colors duration-500">
+                  {/* CATEGORÍA: Cambiamos text-primario por 'text-cine-red' */}
+                  <span className="text-[10px] font-mono tracking-widest uppercase text-cine-red transition-colors duration-700">
                     {video.category}
                   </span>
                   <span className="text-[10px] font-mono tracking-widest uppercase opacity-30">
@@ -163,8 +166,8 @@ export default function Videos() {
                   </span>
                 </div>
                 
-                {/* Título y Hover Effect */}
-                <h4 className="text-xl font-serif font-bold leading-snug group-hover:text-primario transition-colors duration-300">
+                {/* Título y Hover Effect: Usamos 'text-titulo' y hover en 'text-cine-red' */}
+                <h4 className="text-xl font-serif font-bold text-titulo leading-snug group-hover:text-cine-red transition-colors duration-300">
                   {video.title}
                 </h4>
               </motion.div>

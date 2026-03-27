@@ -1,10 +1,9 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "motion/react";
 import { Calendar, MapPin, Film, MessageCircle, ArrowRight } from "lucide-react";
 
 // 1. DATASET DE PRUEBA (Nuestra Cartelera)
-// Usamos formato YYYY-MM-DD para poder filtrar fácilmente por año y mes.
 const EVENTOS_MOCK = [
   {
     id: 1,
@@ -35,16 +34,6 @@ const EVENTOS_MOCK = [
     imagen: "https://images.unsplash.com/photo-1618477461853-cf6ed80fbfc5?q=80&w=1000&auto=format&fit=crop",
     estado: "pasado",
     sinopsisBreve: "Satoshi Kon y la disociación de la identidad digital."
-  },
-  {
-    id: 4,
-    titulo: "Charla: Cine Z y la Crítica Independiente",
-    tipo: "Conversatorio",
-    fecha: "2025-08-05",
-    lugar: "Centro Cultural",
-    imagen: "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1000&auto=format&fit=crop",
-    estado: "pasado",
-    sinopsisBreve: "Un repaso a nuestra historia desde 2017."
   }
 ];
 
@@ -58,98 +47,94 @@ const MESES = [
   { valor: "11", label: "Noviembre" }, { valor: "12", label: "Diciembre" }
 ];
 
-const ANOS = ["todos", "2026", "2025", "2024", "2023"]; // Puedes generarlos dinámicamente luego
+const ANOS = ["todos", "2026", "2025", "2024"];
 
 export default function Eventos() {
-  // 2. ESTADOS (El Controlador de la Línea de Tiempo)
   const [mesSeleccionado, setMesSeleccionado] = useState("todos");
   const [anoSeleccionado, setAnoSeleccionado] = useState("todos");
 
-  // 3. LÓGICA DE CLASIFICACIÓN
-  // Separamos los eventos futuros (Highlights)
   const eventosFuturos = EVENTOS_MOCK.filter(e => e.estado === "futuro");
 
-  // Filtramos los eventos pasados según nuestro "Calendario"
   const eventosPasados = useMemo(() => {
     return EVENTOS_MOCK.filter(e => {
       if (e.estado !== "pasado") return false;
-      const [ano, mes] = e.fecha.split("-"); // Extraemos "2026" y "04" de "2026-04-15"
-      
+      const [ano, mes] = e.fecha.split("-");
       const cumpleMes = mesSeleccionado === "todos" || mes === mesSeleccionado;
       const cumpleAno = anoSeleccionado === "todos" || ano === anoSeleccionado;
-      
       return cumpleMes && cumpleAno;
     });
   }, [mesSeleccionado, anoSeleccionado]);
 
   return (
-    <div className="min-h-screen bg-fondo text-texto transition-colors duration-500 font-sans selection:bg-primario selection:text-white">
+    <div className="min-h-screen bg-fondo text-texto transition-colors duration-700 font-sans selection:bg-cine-red selection:text-white relative z-10">
       
       {/* NAVEGACIÓN */}
-      <nav className="p-6 flex justify-between items-center border-b border-texto/10">
-        <Link to="/" className="text-xs font-bold tracking-[0.2em] uppercase hover:text-primario transition-colors">
-          [ ← Inicio ]
+      <nav className="p-8 md:p-12 flex justify-between items-center border-b border-texto/10">
+        <Link to="/" className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase hover:text-cine-red transition-colors">
+          [ ← INICIO ]
         </Link>
-        <h2 className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 italic">
+        <h2 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase opacity-40 italic">
           Cartelera & Archivo
         </h2>
       </nav>
 
       <main className="max-w-7xl mx-auto p-6 md:p-12">
         
-        <header className="mb-16">
+        <header className="mb-20">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-6xl md:text-8xl font-black tracking-tighter mb-4"
+            className="text-7xl md:text-9xl font-display font-black tracking-tighter mb-6 text-titulo transition-colors duration-700"
           >
-            EVENTOS<span className="text-primario">.</span>
+            EVENTOS<span className="text-cine-red">.</span>
           </motion.h1>
-          <p className="font-serif text-xl opacity-80 max-w-2xl leading-relaxed">
-            Proyecciones, debates y encuentros presenciales. Únete a la comunidad de Clase Z.
+          <p className="font-serif text-xl opacity-70 max-w-2xl leading-relaxed font-light">
+            Proyecciones, debates y encuentros presenciales. Únete a la comunidad de Clase Z en la oscuridad de la sala.
           </p>
         </header>
 
-        {/* SECCIÓN 1: EVENTOS FUTUROS (Destacados) */}
+        {/* SECCIÓN 1: PRÓXIMOS ENCUENTROS */}
         {eventosFuturos.length > 0 && (
-          <section className="mb-24">
-            <h3 className="text-xs font-bold tracking-[0.2em] uppercase opacity-50 mb-8 border-b border-texto/10 pb-4">
+          <section className="mb-32">
+            <h3 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase opacity-40 mb-10 border-b border-texto/10 pb-4">
               Próximos Encuentros
             </h3>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
               {eventosFuturos.map((evento, index) => (
                 <motion.article 
                   key={evento.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.2 }}
-                  className="group relative flex flex-col overflow-hidden bg-texto/5 border border-texto/10 hover:border-primario transition-all duration-500"
+                  className="group relative flex flex-col overflow-hidden bg-texto/[0.02] border border-texto/10 hover:border-cine-red transition-all duration-700 rounded-2xl"
                 >
                   <div className="aspect-video relative overflow-hidden">
-                    <img src={evento.imagen} alt={evento.titulo} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-105" />
-                    {/* Badge tipo de evento */}
-                    <div className="absolute top-4 left-4 bg-fondo text-texto px-3 py-1 text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+                    <img 
+                      src={evento.imagen} 
+                      alt={evento.titulo} 
+                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000 img-theme-aware desaturate group-hover:desaturate-0" 
+                    />
+                    <div className="absolute top-6 left-6 bg-fondo/90 backdrop-blur-md text-texto px-4 py-1.5 text-[9px] font-mono font-bold uppercase tracking-widest flex items-center gap-2 rounded-full border border-texto/10">
                       {evento.tipo === "Proyección" ? <Film size={12}/> : <MessageCircle size={12}/>}
                       {evento.tipo}
                     </div>
                   </div>
                   
-                  <div className="p-6 md:p-8 flex-1 flex flex-col justify-between">
+                  <div className="p-8 md:p-10 flex-1 flex flex-col justify-between">
                     <div>
-                      <div className="flex flex-wrap gap-4 text-xs font-bold tracking-widest uppercase opacity-60 mb-4">
-                        <span className="flex items-center gap-1 text-primario"><Calendar size={14}/> {evento.fecha}</span>
-                        <span className="flex items-center gap-1"><MapPin size={14}/> {evento.lugar}</span>
+                      <div className="flex flex-wrap gap-6 text-[10px] font-mono font-bold tracking-widest uppercase opacity-50 mb-6">
+                        <span className="flex items-center gap-2 text-cine-red transition-colors"><Calendar size={14}/> {evento.fecha}</span>
+                        <span className="flex items-center gap-2"><MapPin size={14}/> {evento.lugar}</span>
                       </div>
-                      <h4 className="text-3xl md:text-4xl font-black tracking-tight mb-4 group-hover:text-primario transition-colors">
+                      <h4 className="text-3xl md:text-4xl font-display font-bold tracking-tight mb-6 group-hover:text-cine-red transition-colors duration-500">
                         {evento.titulo}
                       </h4>
-                      <p className="font-serif opacity-80 mb-6 line-clamp-2">
+                      <p className="font-serif font-light opacity-60 mb-10 line-clamp-2 text-lg">
                         {evento.sinopsisBreve}
                       </p>
                     </div>
-                    {/* Botón (Simulado por ahora, luego irá a la página del evento) */}
-                    <button className="self-start flex items-center gap-2 text-xs font-black tracking-[0.2em] uppercase border-b-2 border-transparent group-hover:border-primario pb-1 transition-all">
-                      Ver Detalles <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform"/>
+                    <button className="self-start flex items-center gap-3 text-[10px] font-mono font-bold tracking-[0.2em] uppercase border-b border-transparent group-hover:border-cine-red pb-1 transition-all">
+                      Ver Detalles <ArrowRight size={14} className="group-hover:translate-x-3 transition-transform duration-500"/>
                     </button>
                   </div>
                 </motion.article>
@@ -158,65 +143,64 @@ export default function Eventos() {
           </section>
         )}
 
-        {/* SECCIÓN 2: ARCHIVO DE EVENTOS (Con filtro de calendario) */}
-        <section>
-          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-texto/10 pb-6 mb-8 gap-6">
-            <h3 className="text-xs font-bold tracking-[0.2em] uppercase opacity-50">
-              Archivo Histórico
+        {/* SECCIÓN 2: ARCHIVO HISTÓRICO */}
+        <section className="mb-20">
+          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-texto/10 pb-8 mb-12 gap-8">
+            <h3 className="text-[10px] font-mono font-bold tracking-[0.2em] uppercase opacity-40">
+              Archivo de Bitácora
             </h3>
             
-            {/* CONTROLES DE FILTRO (La Moviola) */}
             <div className="flex gap-4">
               <select 
                 value={anoSeleccionado}
                 onChange={(e) => setAnoSeleccionado(e.target.value)}
-                className="bg-transparent border border-texto/20 text-texto text-xs font-bold uppercase tracking-widest p-2 focus:outline-none focus:border-primario cursor-pointer"
+                className="bg-texto/[0.03] border border-texto/10 text-texto text-[10px] font-mono font-bold uppercase tracking-widest p-3 px-5 rounded-full focus:outline-none focus:border-cine-red cursor-pointer transition-all"
               >
-                {ANOS.map(ano => <option key={ano} value={ano} className="bg-fondo text-texto">{ano === "todos" ? "Cualquier Año" : ano}</option>)}
+                {ANOS.map(ano => <option key={ano} value={ano} className="bg-fondo text-texto">{ano === "todos" ? "Año: Todos" : ano}</option>)}
               </select>
 
               <select 
                 value={mesSeleccionado}
                 onChange={(e) => setMesSeleccionado(e.target.value)}
-                className="bg-transparent border border-texto/20 text-texto text-xs font-bold uppercase tracking-widest p-2 focus:outline-none focus:border-primario cursor-pointer"
+                className="bg-texto/[0.03] border border-texto/10 text-texto text-[10px] font-mono font-bold uppercase tracking-widest p-3 px-5 rounded-full focus:outline-none focus:border-cine-red cursor-pointer transition-all"
               >
-                {MESES.map(mes => <option key={mes.valor} value={mes.valor} className="bg-fondo text-texto">{mes.label}</option>)}
+                {MESES.map(mes => <option key={mes.valor} value={mes.valor} className="bg-fondo text-texto">{mes.label.toUpperCase()}</option>)}
               </select>
             </div>
           </div>
 
-          {/* GRILLA DEL ARCHIVO */}
-          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <motion.div layout className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <AnimatePresence mode="popLayout">
               {eventosPasados.map(evento => (
                 <motion.article
                   layout
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
                   key={evento.id}
-                  className="group flex flex-col border border-texto/10 bg-texto/5 hover:bg-texto/10 transition-colors p-4 cursor-pointer"
+                  className="group flex flex-col border border-texto/10 bg-texto/[0.02] hover:bg-texto/[0.05] transition-all p-6 rounded-xl cursor-pointer"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <span className="text-[10px] font-bold tracking-widest uppercase py-1 px-2 bg-texto/10 text-texto/60">
+                  <div className="flex justify-between items-start mb-6">
+                    <span className="text-[9px] font-mono font-bold tracking-widest uppercase py-1.5 px-3 bg-texto/5 text-texto/40 rounded">
                       {evento.fecha}
                     </span>
-                    {evento.tipo === "Proyección" ? <Film size={16} className="opacity-30"/> : <MessageCircle size={16} className="opacity-30"/>}
+                    <div className="opacity-20 group-hover:text-cine-red group-hover:opacity-100 transition-all">
+                      {evento.tipo === "Proyección" ? <Film size={16}/> : <MessageCircle size={16}/>}
+                    </div>
                   </div>
-                  <h4 className="text-xl font-black leading-tight mb-2 group-hover:text-primario transition-colors">
+                  <h4 className="text-xl font-display font-bold leading-tight mb-4 group-hover:text-cine-red transition-colors">
                     {evento.titulo}
                   </h4>
-                  <p className="text-xs opacity-60 flex items-center gap-1 mt-auto pt-4 border-t border-texto/5">
+                  <p className="text-[10px] font-mono font-bold uppercase tracking-widest opacity-30 flex items-center gap-2 mt-auto pt-6 border-t border-texto/5">
                     <MapPin size={12}/> {evento.lugar}
                   </p>
                 </motion.article>
               ))}
             </AnimatePresence>
             
-            {/* ESTADO VACÍO */}
             {eventosPasados.length === 0 && (
-              <div className="col-span-full py-12 text-center opacity-40 font-serif italic text-lg">
-                No hay registros en esta fecha en nuestra bitácora.
+              <div className="col-span-full py-24 text-center">
+                <p className="font-serif italic text-2xl opacity-20">Ningún fotograma encontrado en esta fecha...</p>
               </div>
             )}
           </motion.div>

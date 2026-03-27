@@ -2,13 +2,13 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
+
 import { useState, useEffect } from "react";
-// 1. IMPORTANTE: Agregamos "Link" a esta línea
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-import { Sun, Moon } from "lucide-react";
 import { motion } from "motion/react";
 
 import Navbar from "./components/MenuOverlay"; 
+import CameraLens from "./components/CameraLens"; 
 
 import Home from "./pages/Home";
 import Ensayos from "./pages/Ensayos";
@@ -21,18 +21,22 @@ import Biblioteca from "./pages/Biblioteca";
 import Eventos from "./pages/Eventos";
 
 export default function App() {
-  const [isDark, setIsDark] = useState(true);
-  
+  // --- CONSOLA DE DIRECCIÓN ---
+
+  // 1. CONTROL DE ESCENOGRAFÍA: Maneja la animación de encoger la página
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDark]);
+  // 2. CONTROL DE ILUMINACIÓN: Maneja los filtros de color
+  const [epoca, setEpoca] = useState('moderna');
 
+  // 3. EFECTO DE LUZ: Cuando 'epoca' cambia, aplicamos el filtro al <html>
+  useEffect(() => {
+    const html = document.documentElement;
+    html.classList.remove('theme-moderna', 'theme-technicolor', 'theme-clasico');
+    html.classList.add(`theme-${epoca}`);
+  }, [epoca]);
+
+  // 4. ANIMACIÓN DEL ESCENARIO 
   const mainStageVariants = {
     closed: { scale: 1, x: 0, borderRadius: "0px" },
     open: { scale: 0.95, x: "-15%", borderRadius: "24px" }
@@ -41,7 +45,7 @@ export default function App() {
   return (
     <BrowserRouter>
       
-      {/* NUEVO: TU TÍTULO / LOGO FLOTANTE (ARRIBA A LA IZQUIERDA) */}
+      {/* 1. TU TÍTULO / LOGO FLOTANTE */}
       <Link 
         to="/"
         className="fixed top-8 left-6 md:top-12 md:left-12 z-[9999] font-serif font-bold text-lg md:text-xl tracking-tighter text-texto hover:opacity-50 transition-opacity mix-blend-difference"
@@ -50,31 +54,22 @@ export default function App() {
         mientrasloscréditos<br className="md:hidden"/>pasan.
       </Link>
 
-      {/* EL INTERRUPTOR GLOBAL (Tema oscuro/claro) */}
-      {/* Ajustado para no chocar con el título ni con el menú */}
-      <button 
-        onClick={() => setIsDark(!isDark)}
-        className="fixed top-8 right-24 md:top-12 md:right-32 z-[9999] p-2.5 rounded-full border border-texto text-texto hover:bg-texto hover:text-fondo transition-all duration-300 mix-blend-difference"
-        aria-label="Cambiar Tema"
-      >
-        {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-      </button>
-
-      <div 
-        className="fixed inset-0 pointer-events-none opacity-[0.04] transition-opacity duration-700 z-0 mix-blend-difference" 
-        style={{ 
-          backgroundImage: `
-            linear-gradient(to right, var(--color-texto) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--color-texto) 1px, transparent 1px)
-          `, 
-          backgroundSize: "64px 64px" 
-        }}
+      {/* 2. SELECTOR DE ÉPOCAS (Lente de Cámara) */}
+      <CameraLens 
+        currentEpoca={epoca} 
+        setEpoca={setEpoca} 
       />
 
-      {/* LE PASAMOS EL ESTADO AL MENÚ */}
+      {/* 3. CAPA DE CELULOIDE (FILM GRAIN) 
+          Colocamos esta capa fija por detrás de todo el contenido interactivo
+          para darle esa textura orgánica y cinematográfica.
+      */}
+      <div className="film-grain" />
+
+      {/* 4. MENÚ LATERAL DE NAVEGACIÓN */}
       <Navbar isOpen={isMenuOpen} setIsOpen={setIsMenuOpen} />
 
-      {/* EL ESCENARIO ANIMADO */}
+      {/* 5. EL ESCENARIO ANIMADO (Donde se proyectan las páginas) */}
       <div className="bg-[#0a0a0a] w-full h-screen overflow-hidden">
         <motion.div
           variants={mainStageVariants}
