@@ -33,7 +33,7 @@ const phraseVariants = {
     opacity: 0,
     transition: {
       y:       { duration: EXIT_MS / 1000, ease: [0.4, 0, 0.8, 0.6] as [number, number, number, number] },
-      opacity: { duration: (EXIT_MS / 1000) * 0.65, ease: 'easeIn' },
+      opacity: { duration: (EXIT_MS / 1000) * 0.65, ease: 'easeIn' as const },
     },
   },
 }
