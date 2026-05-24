@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI agents and tool configuration directories
+.*
+!/.gitignore
+!/.github
+!/.env.example
+skills/
+skills-lock.json
+
+
